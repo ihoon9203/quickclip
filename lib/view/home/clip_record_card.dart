@@ -22,16 +22,21 @@ class ClipRecordCard extends StatefulWidget {
 }
 
 class _ClipRecordCardState extends State<ClipRecordCard> {
-  late var directory;
+  String path = '';
 
   @override
   void initState() {
     super.initState();
-    setPath();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setPath();
+    });
   }
 
   void setPath() async {
-    directory = await getApplicationDocumentsDirectory();
+    Directory directory = await getApplicationDocumentsDirectory();
+    setState(() {
+      path = directory.path;
+    });
   }
   
 
@@ -43,9 +48,6 @@ class _ClipRecordCardState extends State<ClipRecordCard> {
     double cropWidth = widget.record.containsKey('cropWidth') ? widget.record['cropWidth'] : -1;
     double cropLength = widget.record.containsKey('cropLength') ? widget.record['cropLength'] : -1;
     int timestamp = widget.record['timestamp'];
-
-
-    print(widget.record['texts'].runtimeType);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -53,7 +55,7 @@ class _ClipRecordCardState extends State<ClipRecordCard> {
           CupertinoPageRoute(
             // builder: (context) => AnalysisScreen(image: File(croppedImage), textlist: texts.split(' '), originImagePath: record['originImagePath'].toString(), croppedImagePath: croppedImage,),
             builder: (context) => AnalysisScreen(
-              image: File(directory+croppedImage), 
+              image: File('$path/$croppedImage'), 
               textlist: texts.split(' '),
               originImagePath: originImage,
               croppedImagePath: croppedImage, 
@@ -74,6 +76,7 @@ class _ClipRecordCardState extends State<ClipRecordCard> {
           children: [
             Container(
               width: 100,
+              height: 100,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
               ),
@@ -83,12 +86,13 @@ class _ClipRecordCardState extends State<ClipRecordCard> {
                   bottomLeft: Radius.circular(12),
                 ),
                 child: Image.file(
-                  File(croppedImage),
+                  File('$path/$croppedImage'),
                   fit: BoxFit.cover, // 이미지의 비율을 유지하면서 컨테이너에 맞게 조정
                 ),
               ),
             ),
-             Padding(
+            Expanded(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -96,18 +100,26 @@ class _ClipRecordCardState extends State<ClipRecordCard> {
                   children: [
                     Text(
                       timestamp.toString().toFormattedDate(),
-                      style: const TextStyle(fontSize: 16, color: Colors.white70, fontWeight: FontWeight.normal),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                     Text(
-                      texts, 
-                      style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                      texts,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
-                    ), 
+                    ),
                   ],
-                )
+                ),
+              ),
             ),
-            Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: GestureDetector(

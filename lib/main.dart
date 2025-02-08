@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_clip/provider/analysis_provider.dart';
 import 'package:quick_clip/utils/stylesheet.dart';
@@ -18,9 +19,23 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+    Future<InitializationStatus> _initGoogleMobileAds() {
+      // TODO: Initialize Google Mobile Ads SDK
+      return MobileAds.instance.initialize();
+    }
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => DisplayScreen(imageXfile: image.path),
+        builder: (context) => DisplayScreen(imagePath: image.path),
       ),
     );
   }

@@ -8,19 +8,24 @@ class TextChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.yellowAccent,
-          fontSize: 20,
+    return GestureDetector(
+      onTap: () {
+        onPressedAction();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(4),
         ),
-      ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.yellowAccent,
+            fontSize: 20,
+          ),
+        ),
+      )
     );
   }
 }

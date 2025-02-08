@@ -168,14 +168,16 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
                       color: Colors.transparent,
                       child: TextChip(
                         text: _textlist[index],
-                        onPressedAction: () {},
+                        onPressedAction: () {
+                          _onTappedForEdit(index);
+                        },
                       ),
                     ),
                     onDragEnd: (data) {
                       // 만약 같은 포지션으로 드래그 되었다면
-                      if (!data.wasAccepted) {
-                        _onTappedForEdit(index);
-                      };
+                      // if (!data.wasAccepted) {
+                      //   _onTappedForEdit(index);
+                      // };
                     },
                     childWhenDragging: Opacity(
                       opacity: 0.5,
@@ -232,6 +234,12 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                 ),
+                onTapOutside: (e) {
+                  setState(() {
+                    _textlist = _textEditingController.text.split(' ');
+                  });
+                  Navigator.of(context).pop();
+                },
               ),
             ),
             const SizedBox(height: 10),

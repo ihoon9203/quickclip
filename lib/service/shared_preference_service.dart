@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,7 +52,7 @@ class SharedPreferenceService {
     var data = pref.getString(key);
     if (data == null) {
       return null;
-    } else {
+    } else { 
       Map<String, dynamic> map = jsonDecode(data);
       return map;
     }
@@ -59,18 +60,21 @@ class SharedPreferenceService {
 
   Future<void> removeData(String key) async {
     var pref = await SharedPreferences.getInstance();
+    var directory = await getApplicationDocumentsDirectory();
     Map<String, dynamic>? dataMap = await getData(key);
     if (dataMap == null) {
       return;
     } else { // 이미지 삭제
-      if (dataMap.containsKey(DataMapKey.originImagePath.key)) {
-        File(dataMap[DataMapKey.originImagePath.key]).deleteSync();
-      }
-      if (dataMap.containsKey(DataMapKey.croppedImagePath.key)) {
-        File(dataMap[DataMapKey.croppedImagePath.key]).deleteSync();
-      }
+      await deleteFile(dataMap[DataMapKey.originImagePath.key]);
+      await deleteFile(dataMap[DataMapKey.croppedImagePath.key]);
+      // if (dataMap.containsKey(DataMapKey.originImagePath.key)) {
+      //   await File('${directory.path}/${dataMap[DataMapKey.originImagePath.key]}').delete();
+      // }
+      // if (dataMap.containsKey(DataMapKey.croppedImagePath.key)) {
+      //   await File('${directory.path}/${dataMap[DataMapKey.croppedImagePath.key]}').delete();
+      // }
     }
-    pref.remove(key);
+    await pref.remove(key);
   }
 
   Future<List<String>> getKeys() async {
@@ -95,5 +99,21 @@ class SharedPreferenceService {
       }
     }
     return dataList;
+  }
+
+   Future<void> deleteFile(String path) async {
+    var directory = await getApplicationDocumentsDirectory();
+
+    final fullPath = join(directory.path, path);
+    final file = File(fullPath);
+
+    try {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      print('[$path] 파일 삭제 실패: $e');
+      throw e; // 필요 시 호출부에서 처리
+    }
   }
 }

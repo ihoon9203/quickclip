@@ -41,7 +41,13 @@ class AnalysisProvider extends ChangeNotifier {
     final String croppedFileName = 'cropped_${DateTime.now().millisecondsSinceEpoch}.png';
     final String croppedPermanentPath = '${directory.path}/$croppedFileName';
 
-    var data = await SharedPreferenceService().saveData(originImagePath: originPermanentPath, croppedImagePath: croppedPermanentPath, texts: texts, cropWidth: cropWidth, cropLength: cropLength);
+    File sourceOriginFile = File(originImagePath);
+    await sourceOriginFile.copy(originPermanentPath);
+
+    File sourceCropFile = File(croppedImagePath);
+    await sourceCropFile.copy(croppedPermanentPath);
+
+    var data = await SharedPreferenceService().saveData(originImagePath: originFileName, croppedImagePath: croppedFileName, texts: texts, cropWidth: cropWidth, cropLength: cropLength);
     _records.add(data);
     
     notifyListeners();
@@ -53,6 +59,7 @@ class AnalysisProvider extends ChangeNotifier {
       return;
     }
     int timestamp = data[DataMapKey.timestamp.key];
+    
     _records.removeWhere((element) => element[DataMapKey.timestamp.key] == timestamp);
     SharedPreferenceService().removeData(key);
     notifyListeners();

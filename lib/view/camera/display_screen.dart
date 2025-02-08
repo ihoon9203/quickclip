@@ -133,6 +133,7 @@ class _DisplayScreenState extends State<DisplayScreen> {
       body:Stack(
         children: [
           Crop(
+            interactive: true,
             controller: _controller,
             image: File(widget.imagePath).readAsBytesSync(),
             initialRectBuilder: InitialRectBuilder.withArea(
