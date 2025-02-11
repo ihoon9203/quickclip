@@ -88,6 +88,15 @@ class _ClipRecordCardState extends State<ClipRecordCard> {
                 child: Image.file(
                   File('$path/$croppedImage'),
                   fit: BoxFit.cover, // 이미지의 비율을 유지하면서 컨테이너에 맞게 조정
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(
+                      child: Icon(
+                        CupertinoIcons.photo,
+                        color: Colors.white70,
+                        size: 50,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

@@ -72,6 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
+            ),TextButton(
+                onPressed: () => throw Exception(),
+                child: const Text("Throw Test Exception"),
             ),
             const SizedBox(
               height: 50,
