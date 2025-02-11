@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,14 +59,14 @@ class TextEditDialog extends StatelessWidget {
                   onPressed: () {
                     onDelete(index);
                   },
-                  child: const Text('삭제', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: Text('delete'.tr(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 )
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Colors.grey)
+                    backgroundColor: WidgetStateProperty.all(Colors.blueAccent)
                   ),
                   onPressed: () {
                     onEdit(textEditingController.text, index);

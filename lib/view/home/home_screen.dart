@@ -1,14 +1,23 @@
+import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:camera/camera.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_clip/provider/analysis_provider.dart';
-import 'package:quick_clip/service/shared_preference_service.dart';
+import 'package:quick_clip/utils/service/image_process_service.dart';
+import 'package:quick_clip/utils/service/shared_preference_service.dart';
 import 'package:quick_clip/utils/stylesheet.dart';
-import 'package:quick_clip/view/camera/camera_screen.dart';
-import 'package:quick_clip/view/camera/display_screen.dart';
+import 'package:quick_clip/view/analysis/analysis_screen.dart';
+import 'package:quick_clip/view/camera/crop_screen.dart';
+import 'package:quick_clip/view/common/loading_screen.dart';
 import 'package:quick_clip/view/home/clip_record_card.dart';
 import 'package:quick_clip/view/home/clip_record_list_screen.dart';
 
@@ -20,58 +29,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     super.initState();
   }
-  
-
 
   Future _pickImageFromCamera() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.camera);
-
-    if (image == null) {
+    CropImageResponse? response = await ImageProcessService().pickImageFromCamera();
+    if (response == null) {
       return;
+    } else {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => LoadingScreen(originImagePath: response.originPath, croppedImagePath: response.croppedPath)
+        )
+      );
     }
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => DisplayScreen(imagePath: image.path),
-      ),
-    );
   }
 
-  void _onCameraTap() async {
-    var result = await Permission.camera.request();
-    if (result.isGranted) {
-      var cameras = await availableCameras();
-      var camera = cameras.first;
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => CameraScreen(camera: camera),
-        ),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('카메라 권한이 필요합니다.'),
-            content: const Text('카메라 권한을 허용해주세요.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('확인'),
-              )
-            ],
-          );
-        }
-      );
-    }
-    
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const Center(
               child: Text(
-                'CLIP LENS',
+                'Quick Clip',
                 style: TextStyle(
                   fontSize: 50,
-                  fontStyle: FontStyle.italic,
                   color: Colors.white
                 ),
                 textAlign: TextAlign.center,
@@ -135,21 +110,21 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Row(
                 children: [
-                  const Text('최근 기록', style: TextStyle(color: Colors.white, fontSize: 20)),
+                  Text('recent_records'.tr(), style: TextStyle(color: Colors.white, fontSize: 20)),
                   const Spacer(),
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () { 
                       Navigator.of(context).push(
                         CupertinoPageRoute(
-                          builder: (context) => ClipRecordListScreen()
+                          builder: (context) => const ClipRecordListScreen()
                         ),
                       );
                     },
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Text('더 보기', style: TextStyle(color: Colors.white, fontSize: 20)),
-                        Icon(CupertinoIcons.chevron_right, color: Colors.white)
+                        Text('see_more'.tr(), style: const TextStyle(color: Colors.white, fontSize: 20)),
+                        const Icon(CupertinoIcons.chevron_right, color: Colors.white)
                       ]
                     )
                   ),
@@ -164,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: ClipRecordCard(
-                  imagePath: provider.records[index]['originImagePath'], 
+                  imagePath: provider.records[index]['originImagePath'] ?? '', 
                   record: provider.records[index],
                   onDelete: () {
                     provider.removeDataByTimestamp(provider.records[index][DataMapKey.timestamp.key]);

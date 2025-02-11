@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quick_clip/utils/stylesheet.dart';
 
 class TextChip extends StatelessWidget {
   final String text;
@@ -17,11 +18,15 @@ class TextChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: Stylesheet.labelPrimaryColor,
+            width: 1,
+          )
         ),
         child: Text(
           text,
-          style: const TextStyle(
-            color: Colors.yellowAccent,
+          style: TextStyle(
+            color: Stylesheet.labelPrimaryColor,
             fontSize: 20,
           ),
         ),

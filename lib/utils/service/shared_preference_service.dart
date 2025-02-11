@@ -98,6 +98,7 @@ class SharedPreferenceService {
         dataList.add(map);
       }
     }
+    dataList.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
     return dataList;
   }
 

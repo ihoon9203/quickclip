@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quick_clip/service/shared_preference_service.dart';
+import 'package:quick_clip/utils/service/shared_preference_service.dart';
 
 // 여기다 저장하면서 
 class AnalysisProvider extends ChangeNotifier {

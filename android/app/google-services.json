@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "252465747886",
+    "project_id": "quick-clip-a8b09",
+    "storage_bucket": "quick-clip-a8b09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252465747886:android:99beb857c5411abea8da3f",
+        "android_client_info": {
+          "package_name": "com.runnan_lab.quick_clip"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC94IAhzOZbB3ujr754XxGVOJpFtXrG9HY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

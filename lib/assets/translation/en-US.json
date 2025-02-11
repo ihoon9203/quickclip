@@ -1,0 +1,17 @@
+{
+    "analysis_result": "Analysis Result",
+    "confirm": "Confirm",
+    "recent_records": "Recent",
+    "see_more": "More",
+    "delete": "Delete",
+    "edit": "Edit",
+    "camera_req": "Camera permission required",
+    "camera_req_desc": "Please allow camera permission.",
+    "extract_text": "Extract Text",
+    "cancel": "Cancel",
+    "ask_delete:": "Would you like to delete this analysis result?",
+    "error": "Error",
+    "crop_fail": "Failed to crop image.",
+    "saved_clipboard": "Saved to clipboard",
+    "analyzing_text": "Analyzing text..."
+}

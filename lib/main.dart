@@ -5,16 +5,26 @@ import 'package:provider/provider.dart';
 import 'package:quick_clip/provider/analysis_provider.dart';
 import 'package:quick_clip/utils/stylesheet.dart';
 import 'package:quick_clip/view/home/home_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.black, // navigation bar color
-    statusBarColor: Colors.black, // status bar color
-  ));
-  runApp( 
-    ChangeNotifierProvider(
-      create: (_) => AnalysisProvider()..getRecords(),
-      child: const MyApp(),
+void main() async {
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.black, // navigation bar color
+      statusBarColor: Colors.black, // status bar color
+    )
+  );
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('ko', 'KR')],
+      path: 'lib/assets/translation',
+      fallbackLocale: const Locale('ko', 'KR'),
+      child: ChangeNotifierProvider(
+        create: (_) => AnalysisProvider()..getRecords(),
+        child: const MyApp(),
+      ),
     )
   );
 }
@@ -40,8 +50,11 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
       title: 'Flutter Demo',
       theme: ThemeData(
+        fontFamily: 'SUIT',
         colorScheme: ColorScheme.fromSeed(seedColor:Stylesheet.accentColor),
         useMaterial3: true,
       ),

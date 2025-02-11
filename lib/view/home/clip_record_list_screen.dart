@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_clip/provider/analysis_provider.dart';
-import 'package:quick_clip/service/shared_preference_service.dart';
+import 'package:quick_clip/utils/service/shared_preference_service.dart';
 import 'package:quick_clip/utils/stylesheet.dart';
 import 'package:quick_clip/view/home/clip_record_card.dart';
 
@@ -33,14 +33,17 @@ class _ClipRecordListScreenState extends State<ClipRecordListScreen> {
             onPressed: () {
               provider.clearAllData();
             },
-            icon: Icon(Icons.delete_sweep),
+            icon: const Icon(
+              Icons.delete_sweep,
+              color: Colors.redAccent,
+            ),
           )
         ],
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
           return ClipRecordCard(
-            imagePath: provider.records[index][DataMapKey.croppedImagePath.key], 
+            imagePath: provider.records[index][DataMapKey.croppedImagePath.key] ?? '', 
             record: provider.records[index], 
             onDelete: () {
               provider.removeDataByTimestamp(provider.records[index][DataMapKey.timestamp.key]);

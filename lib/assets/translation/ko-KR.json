@@ -1,0 +1,18 @@
+{
+    "analysis_result": "분석 결과",
+    "confirm": "확인",
+    "recent_records": "최근 기록",
+    "see_more": "더 보기",
+    "delete": "삭제",
+    "edit": "수정",
+    "camera_req": "카메라 권한이 필요합니다.",
+    "camera_req_desc": "카메라 권한을 허용해주세요.",
+    "extract_text": "텍스트 추출",
+    "cancel": "취소",
+    "ask_delete:": "이 분석 결과를 삭제하시겠습니까?",
+    "error": "오류",
+    "crop_fail": "이미지 자르기에 실패했습니다.",
+    "saved_clipboard": "클립보드에 저장되었습니다.",
+    "analyzing_text": "이미지를 분석중입니다..."
+
+}

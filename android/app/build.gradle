@@ -9,7 +9,7 @@ android {
     namespace = "com.runnan_lab.quick_clip"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -30,12 +30,18 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
+    signingConfigs {
+        release {
+            storeFile file("key-release.jks")
+            storePassword "227575"
+            keyAlias "qc-key"
+            keyPassword "227575"
+        }
+    }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+         release {
+            signingConfig signingConfigs.release
         }
     }
     dependencies {
@@ -45,6 +51,8 @@ android {
         implementation 'com.google.mlkit:text-recognition-japanese:16.0.0'
         implementation 'com.google.mlkit:text-recognition-korean:16.0.0'
         implementation 'com.google.android.gms:play-services-ads:23.6.0'
+        implementation platform('com.google.firebase:firebase-bom:33.9.0')
+        implementation 'com.google.firebase:firebase-analytics'
     }
 }
 

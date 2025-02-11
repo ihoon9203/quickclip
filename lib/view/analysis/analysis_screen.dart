@@ -1,16 +1,20 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:camera/camera.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:quick_clip/provider/analysis_provider.dart';
-import 'package:quick_clip/service/shared_preference_service.dart';
+import 'package:quick_clip/utils/service/image_process_service.dart';
+import 'package:quick_clip/utils/service/shared_preference_service.dart';
 import 'package:quick_clip/utils/stylesheet.dart';
+import 'package:quick_clip/view/ad/admob_banner.dart';
 import 'package:quick_clip/view/analysis/text_chip.dart';
 import 'package:quick_clip/view/analysis/text_edit_dialog.dart';
-import 'package:quick_clip/view/camera/display_screen.dart';
+import 'package:quick_clip/view/common/loading_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AnalysisScreen extends StatefulWidget {
@@ -59,8 +63,8 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
       context: context,
       dialogType: DialogType.noHeader,
       animType: AnimType.bottomSlide,
-      title: '삭제',
-      desc: '이 분석 결과를 삭제하시겠습니까?',
+      title: 'delete'.tr(),
+      desc: 'delete_desc'.tr(),
       btnCancelOnPress: () {},
       btnOkOnPress: () {
         provider.removeDataByTimestamp(widget.timestamp);
@@ -69,9 +73,9 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
         });
         Navigator.of(context).pop();
       },
-      btnOkText: '삭제',
+      btnOkText: 'delete'.tr(),
       btnOkColor: Colors.red,
-      btnCancelText: '취소',
+      btnCancelText: 'cancel'.tr(),
       btnCancelColor: Colors.grey,
     ).show();
   }
@@ -120,13 +124,31 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
     );
   }
 
+  void _pickImageFromCamera() async {
+      CropImageResponse? response = await ImageProcessService().cropImage(widget.originImagePath);
+      if (response == null) {
+        return;
+      } else {
+        Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(
+            builder: (context) => LoadingScreen(originImagePath: response.originPath, croppedImagePath: response.croppedPath)
+          )
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Stylesheet.accentColor,
       appBar: AppBar(
         backgroundColor: Stylesheet.accentColor2,
-        title: const Text('분석 결과'),
+        title: Text(
+          'analysis_result'.tr(),
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -134,7 +156,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
             },
             icon: const Icon(
               CupertinoIcons.delete,
-              color: Colors.grey,
+              color: Colors.redAccent,
             ),
           ),
         ],
@@ -147,11 +169,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
               padding: const EdgeInsets.all(20),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => DisplayScreen(imagePath: widget.originImagePath, width: widget.cropWidth, height: widget.cropHeight),
-                    ),
-                  );
+                  _pickImageFromCamera();
                 },
                 child: Image.file(widget.image)
               ),
@@ -160,6 +178,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
             Wrap(
               spacing: 8,
               direction: Axis.horizontal,
+              runSpacing: 4,
               children: [
                 ...List.generate(_textlist.length, (index) {
                   return Draggable<int>(
@@ -238,7 +257,6 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
                   setState(() {
                     _textlist = _textEditingController.text.split(' ');
                   });
-                  Navigator.of(context).pop();
                 },
               ),
             ),
@@ -250,7 +268,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
                   onTap: () async {
                     await Clipboard.setData(
                         ClipboardData(text: _textEditingController.text));
-                    Fluttertoast.showToast(msg: '클립보드에 복사되었습니다.');
+                    Fluttertoast.showToast(msg: 'saved_clipboard'.tr());
                   },
                   child: CircleAvatar(
                     backgroundColor: Stylesheet.accentColor2,
@@ -264,6 +282,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
           ],
         )
       ),
+      bottomNavigationBar: const AdmobBanner(),
     );
   }
 }
